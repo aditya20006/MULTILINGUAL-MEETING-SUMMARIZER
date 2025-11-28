@@ -52,7 +52,22 @@ The system operates on a modular sequential pipeline, ensuring flexibility and s
 6.  **Information Extraction Module**:
     *   *Role*: Uses Regex and BERT-NER to identify dates (Deadlines) and imperative sentences (Tasks).
 
-![System Architecture](/C:/Users/mavar/.gemini/antigravity/brain/db2ba468-375c-4696-90c6-2c87a8f879e6/system_architecture_diagram_1764305860783.png)
+```mermaid
+graph LR
+    A[Audio Input] --> B[Whisper ASR]
+    B --> C{Language Detection}
+    C -- English --> E[Summarization T5]
+    C -- Non-English --> D[NLLB Translation]
+    D --> E
+    E --> F[Feature Extraction]
+    F --> G[Final Report]
+    
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#bbf,stroke:#333,stroke-width:2px
+    style D fill:#bbf,stroke:#333,stroke-width:2px
+    style E fill:#bfb,stroke:#333,stroke-width:2px
+    style G fill:#f96,stroke:#333,stroke-width:2px
+```
 *Figure 1: End-to-End Pipeline Data Flow*
 
 ---
@@ -82,7 +97,17 @@ We compared the Word Error Rate (WER) of our implementation (Whisper) against th
 | Whisper Base | 14.8% | Good. Acceptable for clear audio. |
 | **Whisper Large (Ours)** | **8.2%** | **Excellent.** Near-human performance. |
 
-![WER Graph](/C:/Users/mavar/.gemini/antigravity/brain/db2ba468-375c-4696-90c6-2c87a8f879e6/wer_comparison_graph_1764306221576.png)
+```mermaid
+chart
+    title ASR Model Performance (Lower is Better)
+    x-axis Model
+    y-axis WER (%)
+    type bar
+    series
+        "CMU Sphinx" : 42.5
+        "Whisper Base" : 14.8
+        "Whisper Large" : 8.2
+```
 *Figure 2: ASR Model Performance Comparison on AMI Corpus*
 
 **Analysis:**
@@ -98,7 +123,17 @@ We evaluated the generated summaries using ROUGE metrics, which measure the over
 | **ROUGE-2** | **22.5** | Good capture of bigrams (phrases). |
 | **ROUGE-L** | **42.8** | Excellent sentence structure preservation. |
 
-![ROUGE Graph](/C:/Users/mavar/.gemini/antigravity/brain/db2ba468-375c-4696-90c6-2c87a8f879e6/rouge_score_graph_1764306243511.png)
+```mermaid
+chart
+    title Summarization Quality (ROUGE Scores)
+    x-axis Metric
+    y-axis Score
+    type bar
+    series
+        "ROUGE-1" : 45.2
+        "ROUGE-2" : 22.5
+        "ROUGE-L" : 42.8
+```
 *Figure 3: ROUGE Scores achieved by our T5 model*
 
 **Analysis:**
@@ -120,7 +155,7 @@ The system automatically parses the transcript for temporal expressions (e.g., "
 > *Transcript Segment:* "We need to submit the final report by November 30th."
 > *Extracted Deadline:* **Submit Final Report - Nov 30**
 
-![Deadlines Feature](/C:/Users/mavar/.gemini/antigravity/brain/db2ba468-375c-4696-90c6-2c87a8f879e6/feature_showcase_deadlines_1764306257452.png)
+![Deadlines Feature](deadlines.png)
 *Figure 4: The 'Weekly Deadlines' card in the application interface.*
 
 ### 5.2 Important Tasks & Action Items
@@ -130,7 +165,7 @@ Using NLP heuristics and Named Entity Recognition, the system identifies imperat
 > *Transcript Segment:* "John, please email the design team about the new logo."
 > *Extracted Task:* **Email the design team (Assignee: John)**
 
-![Tasks Feature](/C:/Users/mavar/.gemini/antigravity/brain/db2ba468-375c-4696-90c6-2c87a8f879e6/feature_showcase_tasks_1764306271738.png)
+![Tasks Feature](tasks.png)
 *Figure 5: The 'Important Tasks' interface showing assigned action items.*
 
 ### 5.3 Interactive Q&A
