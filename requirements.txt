@@ -1,0 +1,15 @@
+openai-whisper
+transformers
+sentencepiece
+torch
+fastapi
+uvicorn
+python-multipart
+soundfile
+ffmpeg-python
+gradio
+evaluate
+jiwer
+rouge_score
+fasttext-wheel
+protobuf
